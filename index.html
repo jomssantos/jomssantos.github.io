@@ -1,35 +1,1182 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Teste GitHub Pages</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dev Portfolio — Backend & Systems</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0d1117;
+    --surface2: #161b22;
+    --border: #21262d;
+    --accent: #00ff88;
+    --accent2: #0af;
+    --accent3: #ff6b35;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'Syne', sans-serif;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    overflow-x: hidden;
+  }
+
+  /* SCAN LINE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,255,136,0.015) 2px,
+      rgba(0,255,136,0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-logo span { color: var(--text); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    from { transform: translateY(0); }
+    to { transform: translateY(60px); }
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,255,136,0.08) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    animation: pulse 6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+  }
+
+  .hero-content {
+    position: relative;
+    max-width: 900px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.25);
+    color: var(--accent);
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 1.2s step-end infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .hero-title {
+    font-family: var(--font-sans);
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.8s ease 0.1s both;
+  }
+
+  .hero-title .line2 {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(230,237,243,0.3);
+  }
+
+  .hero-title .accent { color: var(--accent); }
+
+  .hero-desc {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.8;
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.8s ease 0.2s both;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeDown 0.8s ease 0.3s both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent);
+    color: #000;
+    padding: 0.8rem 1.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.2s;
+    border: none; cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background: #00cc6a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,255,136,0.3);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: var(--text);
+    padding: 0.8rem 1.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    position: absolute;
+    right: 4rem;
+    bottom: 4rem;
+    display: flex;
+    gap: 3rem;
+    animation: fadeUp 1s ease 0.4s both;
+  }
+
+  .stat { text-align: right; }
+  .stat-num {
+    font-family: var(--font-sans);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.3rem;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 4rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .section-num {
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+  }
+
+  .section-title {
+    font-family: var(--font-sans);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .skill-card {
+    background: var(--surface);
+    padding: 2rem;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--card-accent, var(--accent));
+    transition: height 0.3s ease;
+  }
+
+  .skill-card:hover::before { height: 100%; }
+  .skill-card:hover { background: var(--surface2); }
+
+  .skill-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .skill-name {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--card-accent, var(--accent));
+  }
+
+  .skill-desc {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.2rem 0.6rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    border-radius: 2px;
+  }
+
+  /* PROJECTS */
+  .projects-list {
+    display: grid;
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .project-item {
+    background: var(--surface);
+    padding: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: start;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,255,136,0.02) 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .project-item:hover { background: var(--surface2); }
+  .project-item:hover::after { opacity: 1; }
+
+  .project-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .project-name {
+    font-family: var(--font-sans);
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  .project-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 600px;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .stack-item {
+    background: rgba(0,170,255,0.08);
+    border: 1px solid rgba(0,170,255,0.2);
+    color: var(--accent2);
+    padding: 0.25rem 0.7rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    border-radius: 2px;
+  }
+
+  .project-meta {
+    text-align: right;
+    min-width: 100px;
+  }
+
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+  }
+
+  .status-live {
+    background: rgba(0,255,136,0.1);
+    border: 1px solid rgba(0,255,136,0.3);
+    color: var(--accent);
+  }
+
+  .status-dev {
+    background: rgba(255,107,53,0.1);
+    border: 1px solid rgba(255,107,53,0.3);
+    color: var(--accent3);
+  }
+
+  .status-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: blink 1.5s step-end infinite;
+  }
+
+  /* TECH STACK */
+  .tech-marquee {
+    overflow: hidden;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4rem;
+    position: relative;
+  }
+
+  .tech-marquee::before,
+  .tech-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 100px;
+    z-index: 2;
+  }
+  .tech-marquee::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+  .tech-marquee::after { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
+
+  .tech-track {
+    display: flex;
+    gap: 3rem;
+    animation: marquee 25s linear infinite;
+    width: max-content;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .tech-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+
+  .tech-item:hover { color: var(--accent); }
+
+  .tech-dot {
+    width: 4px; height: 4px;
+    background: var(--border);
+    border-radius: 50%;
+  }
+
+  /* EXPERIENCE / TERMINAL */
+  .terminal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 800px;
+  }
+
+  .terminal-bar {
+    background: var(--surface2);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .term-btn {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .term-btn-r { background: #ff5f56; }
+  .term-btn-y { background: #febc2e; }
+  .term-btn-g { background: #27c93f; }
+
+  .term-title {
+    flex: 1;
+    text-align: center;
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+
+  .terminal-body {
+    padding: 1.5rem;
+    font-size: 0.75rem;
+    line-height: 2;
+  }
+
+  .term-line { display: flex; gap: 0.5rem; }
+  .term-prompt { color: var(--accent); }
+  .term-cmd { color: var(--text); }
+  .term-comment { color: var(--muted); }
+  .term-out { color: #7d8590; padding-left: 1rem; font-size: 0.7rem; }
+  .term-key { color: var(--accent2); }
+  .term-val { color: var(--accent3); }
+
+  /* CONTACT */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .contact-info {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  .contact-info h3 {
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+
+  .contact-link:hover { color: var(--accent); }
+  .contact-link:hover .link-arrow { transform: translateX(4px); }
+  .link-arrow { transition: transform 0.2s; }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .form-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .form-input, .form-textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.75rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    border-radius: 2px;
+    transition: border-color 0.2s;
+    outline: none;
+    resize: none;
+  }
+
+  .form-input:focus, .form-textarea:focus { border-color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  footer .accent { color: var(--accent); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 6rem 1.5rem 8rem; }
+    .hero-stats { position: relative; right: auto; bottom: auto; margin-top: 3rem; justify-content: flex-start; }
+    section { padding: 4rem 1.5rem; }
+    .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem; }
+    .project-item { grid-template-columns: 1fr; }
+    .project-meta { text-align: left; }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
 <body>
 
-<header>
-<h1>Meu Site de Teste</h1>
-<p>Hospedado no GitHub Pages</p>
-</header>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">dev<span>.</span><span style="color:var(--accent2)">stack</span></div>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#skills">Habilidades</a></li>
+    <li><a href="#projetos">Projetos</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+</nav>
 
-<main>
+<!-- HERO -->
+<section class="hero" id="sobre">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Disponível para projetos
+    </div>
+    <h1 class="hero-title">
+      Desenvolvedor<br>
+      <span class="line2">Full-Stack</span><br>
+      <span class="accent">&amp; Sistemas</span>
+    </h1>
+    <p class="hero-desc">
+      Especialista em arquitetura back-end, APIs robustas, automação de processos e desenvolvimento Android nativo. Construo soluções que vão do firmware embarcado até a interface do usuário.
+    </p>
+    <div class="hero-ctas">
+      <a href="#projetos" class="btn-primary">
+        <span>Ver projetos</span>
+        <span>→</span>
+      </a>
+      <a href="#contato" class="btn-secondary">
+        <span>Entrar em contato</span>
+      </a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">5+</div>
+      <div class="stat-label">Anos de exp.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">30+</div>
+      <div class="stat-label">Projetos</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">99%</div>
+      <div class="stat-label">Uptime médio</div>
+    </div>
+  </div>
+</section>
 
-<div class="card">
-<h2>Teste de Botão</h2>
-<p>Clique no botão abaixo:</p>
-<button onclick="clicar()">Clique aqui</button>
-</div>
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header reveal">
+    <span class="section-num">01 /</span>
+    <h2 class="section-title">Habilidades</h2>
+    <div class="section-line"></div>
+  </div>
 
-<p id="mensagem"></p>
+  <div class="skills-grid">
+    <div class="skill-card reveal" style="--card-accent: #00ff88">
+      <div class="skill-icon">⚙️</div>
+      <div class="skill-name">Back-end & APIs</div>
+      <p class="skill-desc">Arquitetura de microsserviços, APIs RESTful e GraphQL de alta performance. Design de sistemas escaláveis com foco em resiliência e observabilidade.</p>
+      <div class="skill-tags">
+        <span class="tag">Node.js</span>
+        <span class="tag">Python</span>
+        <span class="tag">Go</span>
+        <span class="tag">REST</span>
+        <span class="tag">GraphQL</span>
+        <span class="tag">gRPC</span>
+      </div>
+    </div>
 
-</main>
+    <div class="skill-card reveal" style="--card-accent: #0af">
+      <div class="skill-icon">🤖</div>
+      <div class="skill-name">Automação & DevOps</div>
+      <p class="skill-desc">Pipelines CI/CD, automação de infraestrutura, scripts de deployment e monitoramento. Redução de operações manuais com processos confiáveis.</p>
+      <div class="skill-tags">
+        <span class="tag">Docker</span>
+        <span class="tag">Kubernetes</span>
+        <span class="tag">GitHub Actions</span>
+        <span class="tag">Terraform</span>
+        <span class="tag">Ansible</span>
+      </div>
+    </div>
 
+    <div class="skill-card reveal" style="--card-accent: #ff6b35">
+      <div class="skill-icon">📱</div>
+      <div class="skill-name">Android & Mobile</div>
+      <p class="skill-desc">Aplicativos Android nativos com Kotlin, integração com hardware via Bluetooth/USB, comunicação com APIs back-end proprietárias e publicação no Play Store.</p>
+      <div class="skill-tags">
+        <span class="tag">Kotlin</span>
+        <span class="tag">Java</span>
+        <span class="tag">Jetpack Compose</span>
+        <span class="tag">Room DB</span>
+        <span class="tag">Retrofit</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal" style="--card-accent: #c084fc">
+      <div class="skill-icon">🔌</div>
+      <div class="skill-name">Hardware & Embarcados</div>
+      <p class="skill-desc">Firmware para microcontroladores, comunicação serial/SPI/I²C, prototipagem eletrônica e integração entre sistemas físicos e software.</p>
+      <div class="skill-tags">
+        <span class="tag">C/C++</span>
+        <span class="tag">Arduino</span>
+        <span class="tag">ESP32</span>
+        <span class="tag">Raspberry Pi</span>
+        <span class="tag">MQTT</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal" style="--card-accent: #f472b6">
+      <div class="skill-icon">🗄️</div>
+      <div class="skill-name">Banco de Dados</div>
+      <p class="skill-desc">Modelagem relacional e NoSQL, otimização de queries, replicação e alta disponibilidade. Estratégias de backup, migração e versionamento de schema.</p>
+      <div class="skill-tags">
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">MongoDB</span>
+        <span class="tag">Redis</span>
+        <span class="tag">SQLite</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal" style="--card-accent: #facc15">
+      <div class="skill-icon">🎨</div>
+      <div class="skill-name">Front-end & Design</div>
+      <p class="skill-desc">Interfaces web responsivas, design systems e protótipos interativos. Foco em performance, acessibilidade e experiências visuais coesas.</p>
+      <div class="skill-tags">
+        <span class="tag">React</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">HTML/CSS</span>
+        <span class="tag">Figma</span>
+        <span class="tag">Tailwind</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projetos">
+  <div class="section-header reveal">
+    <span class="section-num">02 /</span>
+    <h2 class="section-title">Projetos</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="projects-list">
+
+    <div class="project-item reveal">
+      <div>
+        <div class="project-tag">Back-end · API · Automação</div>
+        <div class="project-name">Sistema de Gestão IoT</div>
+        <p class="project-desc">Plataforma back-end para coleta, processamento e armazenamento de dados de sensores industriais em tempo real. Suporte a milhares de dispositivos simultâneos com latência sub-100ms via WebSocket e MQTT broker customizado.</p>
+        <div class="project-stack">
+          <span class="stack-item">Node.js</span>
+          <span class="stack-item">MQTT</span>
+          <span class="stack-item">PostgreSQL</span>
+          <span class="stack-item">Redis</span>
+          <span class="stack-item">Docker</span>
+          <span class="stack-item">Grafana</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div class="project-status status-live">
+          <span class="status-dot"></span> Live
+        </div>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div>
+        <div class="project-tag">Android · Hardware · Bluetooth</div>
+        <div class="project-name">App de Controle de Dispositivo</div>
+        <p class="project-desc">Aplicativo Android nativo para configuração e monitoramento de equipamentos industriais via Bluetooth Low Energy. Interface intuitiva com dashboard em tempo real, histórico de leituras e exportação de relatórios em PDF.</p>
+        <div class="project-stack">
+          <span class="stack-item">Kotlin</span>
+          <span class="stack-item">Jetpack Compose</span>
+          <span class="stack-item">BLE SDK</span>
+          <span class="stack-item">Room</span>
+          <span class="stack-item">Coroutines</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div class="project-status status-live">
+          <span class="status-dot"></span> Play Store
+        </div>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div>
+        <div class="project-tag">Automação · CI/CD · DevOps</div>
+        <div class="project-name">Pipeline de Deploy Automatizado</div>
+        <p class="project-desc">Sistema de integração e entrega contínua com testes automatizados, análise estática de código, build de containers e deploy blue-green em Kubernetes. Redução de 80% no tempo de release.</p>
+        <div class="project-stack">
+          <span class="stack-item">GitHub Actions</span>
+          <span class="stack-item">Docker</span>
+          <span class="stack-item">Kubernetes</span>
+          <span class="stack-item">Terraform</span>
+          <span class="stack-item">SonarQube</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div class="project-status status-live">
+          <span class="status-dot"></span> Live
+        </div>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div>
+        <div class="project-tag">Hardware · Firmware · ESP32</div>
+        <div class="project-name">Controlador de Automação Residencial</div>
+        <p class="skill-desc">Firmware para ESP32 com OTA updates, gerenciamento de energia, comunicação WiFi/MQTT e integração com app Android proprietário. PCB customizado com sensores de temperatura, umidade e presença.</p>
+        <div class="project-stack">
+          <span class="stack-item">C++</span>
+          <span class="stack-item">ESP-IDF</span>
+          <span class="stack-item">MQTT</span>
+          <span class="stack-item">FreeRTOS</span>
+          <span class="stack-item">KiCad</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div class="project-status status-dev">
+          <span class="status-dot"></span> Em dev
+        </div>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div>
+        <div class="project-tag">Web · Design · Full-Stack</div>
+        <div class="project-name">Plataforma de E-commerce B2B</div>
+        <p class="project-desc">Sistema completo de comércio eletrônico para indústria, com catálogo customizado por cliente, integração com ERP via API, sistema de pedidos, boletos e rastreamento de entregas.</p>
+        <div class="project-stack">
+          <span class="stack-item">React</span>
+          <span class="stack-item">Python/Django</span>
+          <span class="stack-item">PostgreSQL</span>
+          <span class="stack-item">Celery</span>
+          <span class="stack-item">AWS</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div class="project-status status-live">
+          <span class="status-dot"></span> Live
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TECH STACK MARQUEE -->
+<section id="stack" style="padding: 4rem; border-top: 1px solid var(--border);">
+  <div class="section-header reveal">
+    <span class="section-num">03 /</span>
+    <h2 class="section-title">Stack Técnico</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="tech-marquee">
+    <div class="tech-track">
+      <span class="tech-item">Python</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Node.js</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Kotlin</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Go</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">C / C++</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">PostgreSQL</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">MongoDB</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Redis</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Docker</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Kubernetes</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">React</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">ESP32</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">MQTT</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Linux</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Git</span>
+      <span class="tech-dot"></span>
+      <!-- duplicate for infinite loop -->
+      <span class="tech-item">Python</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Node.js</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Kotlin</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Go</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">C / C++</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">PostgreSQL</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">MongoDB</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Redis</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Docker</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Kubernetes</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">React</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">ESP32</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">MQTT</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Linux</span>
+      <span class="tech-dot"></span>
+      <span class="tech-item">Git</span>
+    </div>
+  </div>
+
+  <!-- TERMINAL -->
+  <div class="terminal reveal">
+    <div class="terminal-bar">
+      <div class="term-btn term-btn-r"></div>
+      <div class="term-btn term-btn-y"></div>
+      <div class="term-btn term-btn-g"></div>
+      <div class="term-title">~/whoami</div>
+    </div>
+    <div class="terminal-body">
+      <div class="term-line"><span class="term-prompt">$</span><span class="term-cmd">cat perfil.json</span></div>
+      <div class="term-out">{</div>
+      <div class="term-out">&nbsp;&nbsp;<span class="term-key">"nome"</span>: <span class="term-val">"Seu Nome"</span>,</div>
+      <div class="term-out">&nbsp;&nbsp;<span class="term-key">"especialidade"</span>: <span class="term-val">"Back-end &amp; Sistemas"</span>,</div>
+      <div class="term-out">&nbsp;&nbsp;<span class="term-key">"localização"</span>: <span class="term-val">"Brasil 🇧🇷"</span>,</div>
+      <div class="term-out">&nbsp;&nbsp;<span class="term-key">"foco"</span>: [<span class="term-val">"APIs"</span>, <span class="term-val">"Android"</span>, <span class="term-val">"Automação"</span>, <span class="term-val">"IoT"</span>],</div>
+      <div class="term-out">&nbsp;&nbsp;<span class="term-key">"disponível"</span>: <span class="term-val">true</span>,</div>
+      <div class="term-out">&nbsp;&nbsp;<span class="term-key">"café_por_dia"</span>: <span class="term-val">∞</span></div>
+      <div class="term-out">}</div>
+      <br>
+      <div class="term-line"><span class="term-prompt">$</span><span class="term-cmd">git log --oneline -3</span></div>
+      <div class="term-out"><span class="term-val">a3f9c2d</span> feat: API de telemetria com latência &lt;50ms</div>
+      <div class="term-out"><span class="term-val">b81e4a1</span> feat: app Android com sync offline-first</div>
+      <div class="term-out"><span class="term-val">c12d7e5</span> fix: otimização de queries — 10x mais rápido</div>
+      <br>
+      <div class="term-line"><span class="term-prompt">$</span><span class="term-comment"># pronto para o próximo desafio_</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contato">
+  <div class="section-header reveal">
+    <span class="section-num">04 /</span>
+    <h2 class="section-title">Contato</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="contact-grid">
+    <div class="reveal">
+      <div class="contact-info">
+        <h3>Vamos construir algo juntos.</h3>
+        <p style="margin-bottom: 2rem;">Aberto para projetos freelance, consultorias técnicas e oportunidades full-time. Respondo em até 24h.</p>
+
+        <a href="mailto:seu@email.com" class="contact-link">
+          <span>✉</span>
+          <span>seu@email.com</span>
+          <span class="link-arrow" style="margin-left: auto">→</span>
+        </a>
+        <a href="https://github.com/seuuser" class="contact-link" target="_blank">
+          <span>⌥</span>
+          <span>github.com/seuuser</span>
+          <span class="link-arrow" style="margin-left: auto">→</span>
+        </a>
+        <a href="https://linkedin.com/in/seuperfil" class="contact-link" target="_blank">
+          <span>◈</span>
+          <span>linkedin.com/in/seuperfil</span>
+          <span class="link-arrow" style="margin-left: auto">→</span>
+        </a>
+        <a href="https://wa.me/55XXXXXXXXXXX" class="contact-link" target="_blank">
+          <span>◉</span>
+          <span>WhatsApp</span>
+          <span class="link-arrow" style="margin-left: auto">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input type="text" class="form-input" placeholder="Seu nome" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-input" placeholder="seu@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Projeto</label>
+          <input type="text" class="form-input" placeholder="Descreva brevemente o projeto">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mensagem</label>
+          <textarea class="form-textarea" rows="5" placeholder="Detalhes, prazo, orçamento..." required></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="align-self: flex-start">
+          <span>Enviar mensagem</span>
+          <span id="send-arrow">→</span>
+        </button>
+        <p id="form-success" style="display:none; color: var(--accent); font-size:0.72rem; margin-top:0.5rem;">✓ Mensagem enviada! Retorno em breve.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-<p>2026 - Teste</p>
+  <span>© 2025 <span class="accent">dev.stack</span> — Todos os direitos reservados</span>
+  <span>Construído com <span class="accent">HTML + CSS + JS puro</span></span>
+  <span style="display:flex;align-items:center;gap:0.4rem;">
+    <span class="badge-dot" style="background:var(--accent)"></span>
+    Disponível para projetos
+  </span>
 </footer>
 
-<script src="script.js"></script>
+<script>
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
 
+  // Skill cards stagger on section entry
+  const skillsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const cards = entry.target.querySelectorAll('.skill-card');
+        cards.forEach((card, i) => {
+          setTimeout(() => card.classList.add('visible'), i * 100);
+        });
+      }
+    });
+  }, { threshold: 0.05 });
+  document.querySelectorAll('.skills-grid').forEach(g => skillsObserver.observe(g));
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+    setTimeout(() => {
+      document.getElementById('form-success').style.display = 'block';
+      btn.innerHTML = '<span>Enviado ✓</span>';
+      btn.style.background = '#00cc6a';
+    }, 1200);
+  }
+
+  // Typing cursor effect on hero
+  const heroAccent = document.querySelector('.hero-title .accent');
+  const texts = ['& Sistemas.', '& Android.', '& Automação.', '& Hardware.'];
+  let idx = 0;
+  setInterval(() => {
+    idx = (idx + 1) % texts.length;
+    heroAccent.style.opacity = '0';
+    setTimeout(() => {
+      heroAccent.textContent = texts[idx];
+      heroAccent.style.opacity = '1';
+    }, 300);
+  }, 2800);
+  heroAccent.style.transition = 'opacity 0.3s';
+</script>
 </body>
 </html>
